@@ -24,9 +24,10 @@ import { useAuthStore } from "@/store/authStore";
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/dashboard" },
-  { text: "Profile", icon: <PersonIcon />, path: "/admin/profile" },
-  { text: "Projects", icon: <WorkIcon />, path: "/admin/projects" },
+  // { text: "Profile", icon: <PersonIcon />, path: "/admin/profile" },
   { text: "Skills", icon: <CodeIcon />, path: "/admin/skills" },
+  { text: "Experiences", icon: <CodeIcon />, path: "/admin/experiences" },
+  { text: "Projects", icon: <WorkIcon />, path: "/admin/projects" },
   { text: "Contact Messages", icon: <EmailIcon />, path: "/admin/messages" },
   { text: "Blog Posts", icon: <ArticleIcon />, path: "/admin/blog" },
   { text: "Settings", icon: <SettingsIcon />, path: "/admin/settings" },

@@ -4,6 +4,9 @@ import AdminLogin from "@/pages/admin/AdminLogin";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Dashboard from "./pages/admin/Dashboard";
 import MainLayout from "./components/layout/MainLayout";
+import Skills from "./pages/admin/Skills";
+import Projects from "./pages/admin/Projects";
+import Experiences from "./pages/admin/Experiences";
 
 export default function App() {
   return (
@@ -27,8 +30,10 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
           {/* Add more nested routes here later */}
           {/* <Route path="profile" element={<Profile />} /> */}
-          {/* <Route path="projects" element={<Projects />} /> */}
-          {/* <Route path="skills" element={<Skills />} /> */}
+         
+          <Route path="skills" element={<Skills />} />
+           <Route path="experiences" element={<Experiences />} />
+           <Route path="projects" element={<Projects />} />
           {/* <Route path="messages" element={<Messages />} /> */}
           {/* <Route path="blog" element={<Blog />} /> */}
           {/* <Route path="settings" element={<Settings />} /> */}
