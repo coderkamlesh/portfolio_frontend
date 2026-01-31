@@ -9,11 +9,11 @@ import {
   Typography,
   Divider,
   Avatar,
+  alpha,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import {
   Dashboard as DashboardIcon,
-  Person as PersonIcon,
   Work as WorkIcon,
   Code as CodeIcon,
   Email as EmailIcon,
@@ -24,7 +24,6 @@ import { useAuthStore } from "@/store/authStore";
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/dashboard" },
-  // { text: "Profile", icon: <PersonIcon />, path: "/admin/profile" },
   { text: "Skills", icon: <CodeIcon />, path: "/admin/skills" },
   { text: "Experiences", icon: <CodeIcon />, path: "/admin/experiences" },
   { text: "Projects", icon: <WorkIcon />, path: "/admin/projects" },
@@ -48,54 +47,34 @@ export default function Sidebar({
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "#1a1a2e",
-        color: "white",
+        // KOI COLOR NAHI DIYA - MUI Drawer khud handle karega
       }}
     >
-      {/* Logo/Brand Section */}
-      <Box
-        sx={{
-          p: 3,
-          display: "flex",
-          alignItems: "center",
-          gap: 2,
-          bgcolor: "rgba(0, 0, 0, 0.2)",
-        }}
-      >
+      {/* Brand Section */}
+      <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
         <Avatar
           sx={{
             width: 45,
             height: 45,
-            bgcolor: "#e94560",
+            bgcolor: "primary.main",
             fontWeight: "bold",
-            fontSize: "1.2rem",
           }}
         >
           {user?.name?.charAt(0) || "A"}
         </Avatar>
         <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 700,
-              letterSpacing: "0.5px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
             Admin Panel
           </Typography>
-          <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.6)" }}>
+          <Typography variant="caption" color="text.secondary">
             Portfolio Manager
           </Typography>
         </Box>
       </Box>
 
-      <Divider sx={{ borderColor: "rgba(255,255,255,0.1)" }} />
+      <Divider />
 
-      {/* Navigation Menu */}
+      {/* Navigation */}
       <Box sx={{ flexGrow: 1, overflowY: "auto", py: 2 }}>
         <List>
           {menuItems.map((item) => {
@@ -105,44 +84,38 @@ export default function Sidebar({
                 <ListItemButton
                   component={Link}
                   to={item.path}
+                  selected={isActive} // MUI ka selected prop use kiya
                   onClick={isMobile ? onDrawerToggle : undefined}
                   sx={{
                     borderRadius: 2,
                     py: 1.5,
-                    bgcolor: isActive
-                      ? "rgba(103, 126, 234, 0.15)"
-                      : "transparent",
-                    color: isActive ? "#667eea" : "rgba(255,255,255,0.8)",
-                    "&:hover": {
-                      bgcolor: isActive
-                        ? "rgba(103, 126, 234, 0.2)"
-                        : "rgba(255,255,255,0.05)",
+                    // Active state styling thoda custom rakha hai taki wo "purple" feel aaye
+                    "&.Mui-selected": {
+                      bgcolor: (theme) => alpha(theme.palette.primary.main, 0.15),
+                      color: "primary.main",
+                      "&:hover": {
+                        bgcolor: (theme) =>
+                          alpha(theme.palette.primary.main, 0.25),
+                      },
+                      "& .MuiListItemIcon-root": {
+                        color: "primary.main",
+                      },
+                      // Left border indicator
+                      "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        left: 0,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 4,
+                        height: "60%",
+                        bgcolor: "primary.main",
+                        borderRadius: "0 4px 4px 0",
+                      },
                     },
-                    transition: "all 0.3s ease",
-                    position: "relative",
-                    "&::before": isActive
-                      ? {
-                          content: '""',
-                          position: "absolute",
-                          left: 0,
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          width: 4,
-                          height: "60%",
-                          bgcolor: "#667eea",
-                          borderRadius: "0 4px 4px 0",
-                        }
-                      : {},
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      color: isActive ? "#667eea" : "rgba(255,255,255,0.7)",
-                      minWidth: 40,
-                    }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
+                  <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
                   <ListItemText
                     primary={item.text}
                     primaryTypographyProps={{
@@ -157,16 +130,10 @@ export default function Sidebar({
         </List>
       </Box>
 
-      {/* Footer Section */}
-      <Box
-        sx={{
-          p: 2,
-          bgcolor: "rgba(0, 0, 0, 0.2)",
-          borderTop: "1px solid rgba(255,255,255,0.1)",
-        }}
-      >
-        <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.5)" }}>
-          © 2024 Portfolio Admin
+      {/* Footer */}
+      <Box sx={{ p: 2, borderTop: "1px solid", borderColor: "divider" }}>
+        <Typography variant="caption" color="text.secondary">
+          © {new Date().getFullYear()} Portfolio Admin
         </Typography>
       </Box>
     </Box>
@@ -174,47 +141,23 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile Drawer */}
-      {isMobile && (
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={onDrawerToggle}
-          slotProps={{
-            modal: {
-              keepMounted: true, // Better mobile performance
-            },
-          }}
-          sx={{
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              border: "none",
-            },
-          }}
-        >
-          {drawerContent}
-        </Drawer>
-      )}
-
-      {/* Desktop Drawer */}
-      {!isMobile && (
-        <Drawer
-          variant="permanent"
-          sx={{
+      <Drawer
+        variant={isMobile ? "temporary" : "permanent"}
+        open={isMobile ? mobileOpen : true}
+        onClose={onDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
             width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-              border: "none",
-            },
-          }}
-          open
-        >
-          {drawerContent}
-        </Drawer>
-      )}
+            borderRight: "1px solid",
+            borderColor: "divider",
+            // Drawer Paper automatically picks background.paper & text.primary
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
     </>
   );
 }
