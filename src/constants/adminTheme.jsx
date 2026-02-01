@@ -178,16 +178,7 @@ export const getAdminTheme = (mode) => {
         }
       },
       
-      MuiCard: {
-        styleOverrides: {
-          root: {
-            borderRadius: 10,
-            boxShadow: "none", // Use border instead of shadow
-            border: "1px solid",
-            borderColor: mode === 'dark' ? "hsl(220, 37%, 20%)" : "hsl(220, 27%, 90%)",
-          }
-        }
-      }
+      
     },
   });
 };

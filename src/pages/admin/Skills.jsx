@@ -14,19 +14,25 @@ import {
   Avatar,
   LinearProgress,
   Chip,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import ImageIcon from "@mui/icons-material/Image"; // Import Image Icon
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSkills } from "@/service/public.service"; 
 import { deleteSkill } from "@/service/admin.service"; 
 import SkillDialog from "@/components/admin/SkillDialog";
+import SkillIconDialog from "@/components/admin/SkillIconDialog"; // Import Dialog
 
 export default function Skills() {
   const queryClient = useQueryClient();
-  const [openDialog, setOpenDialog] = useState(false);
+  
+  // Dialog States
+  const [openFormDialog, setOpenFormDialog] = useState(false);
+  const [openIconDialog, setOpenIconDialog] = useState(false); // State for Icon Dialog
   const [selectedSkill, setSelectedSkill] = useState(null);
 
   // Fetch Skills
@@ -47,14 +53,21 @@ export default function Skills() {
     },
   });
 
+  // --- Handlers ---
   const handleAdd = () => {
     setSelectedSkill(null);
-    setOpenDialog(true);
+    setOpenFormDialog(true);
   };
 
   const handleEdit = (skill) => {
     setSelectedSkill(skill);
-    setOpenDialog(true);
+    setOpenFormDialog(true);
+  };
+
+  // Open Icon Dialog
+  const handleIconClick = (skill) => {
+    setSelectedSkill(skill);
+    setOpenIconDialog(true);
   };
 
   const handleDelete = (id) => {
@@ -87,7 +100,6 @@ export default function Skills() {
       <TableContainer component={Paper} elevation={1}>
         <Table>
           <TableHead>
-            {/* Theme aware background */}
             <TableRow sx={{ bgcolor: "action.hover" }}>
               <TableCell sx={{ fontWeight: 600 }}>Icon</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
@@ -108,7 +120,7 @@ export default function Skills() {
                       width: 40, 
                       height: 40, 
                       objectFit: "contain",
-                      bgcolor: "transparent", // Ensure transparent icons look good
+                      bgcolor: "transparent", 
                       border: "1px solid",
                       borderColor: "divider"
                     }}
@@ -120,7 +132,6 @@ export default function Skills() {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  {/* Replaced manual Box with MUI Chip for better theming */}
                   <Chip 
                     label={skill.category} 
                     size="small" 
@@ -138,7 +149,7 @@ export default function Skills() {
                         sx={{ 
                           height: 8, 
                           borderRadius: 5,
-                          bgcolor: "action.hover", // Track color
+                          bgcolor: "action.hover",
                           "& .MuiLinearProgress-bar": {
                              borderRadius: 5,
                           }
@@ -154,21 +165,41 @@ export default function Skills() {
                 </TableCell>
                 <TableCell align="right">
                   <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <IconButton 
-                      size="small"
-                      onClick={() => handleEdit(skill)}
-                      sx={{ color: "primary.main" }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDelete(skill.id)}
-                      disabled={deleteMutation.isPending}
-                      sx={{ color: "error.main" }}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                    
+                    {/* Update Icon Button */}
+                    <Tooltip title="Update Icon">
+                      <IconButton 
+                        size="small"
+                        onClick={() => handleIconClick(skill)}
+                        color={skill.icon ? "primary" : "default"}
+                      >
+                        <ImageIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    {/* Edit Details Button */}
+                    <Tooltip title="Edit Details">
+                      <IconButton 
+                        size="small"
+                        onClick={() => handleEdit(skill)}
+                        sx={{ color: "info.main" }}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    {/* Delete Button */}
+                    <Tooltip title="Delete">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(skill.id)}
+                        disabled={deleteMutation.isPending}
+                        sx={{ color: "error.main" }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
                   </Box>
                 </TableCell>
               </TableRow>
@@ -184,11 +215,18 @@ export default function Skills() {
         </Table>
       </TableContainer>
 
-      {/* Add/Edit Dialog */}
+      {/* Main Text Form Dialog */}
       <SkillDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        open={openFormDialog}
+        onClose={() => setOpenFormDialog(false)}
         skillToEdit={selectedSkill}
+      />
+
+      {/* Icon Update Dialog */}
+      <SkillIconDialog
+        open={openIconDialog}
+        onClose={() => setOpenIconDialog(false)}
+        skill={selectedSkill}
       />
     </Box>
   );

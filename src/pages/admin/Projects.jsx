@@ -14,20 +14,26 @@ import {
   Chip,
   Link,
   LinearProgress,
+  Tooltip
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import ImageIcon from "@mui/icons-material/Image"; // Image Icon import
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProjects } from "@/service/public.service";
 import { deleteProject } from "@/service/admin.service";
 import ProjectDialog from "@/components/admin/ProjectDialog";
+import ProjectImageDialog from "@/components/admin/ProjectImageDialog"; // Import Image Dialog
 
 export default function Projects() {
   const queryClient = useQueryClient();
-  const [openDialog, setOpenDialog] = useState(false);
+  
+  // States for Dialogs
+  const [openFormDialog, setOpenFormDialog] = useState(false);
+  const [openImageDialog, setOpenImageDialog] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
   // Fetch Projects
@@ -48,14 +54,21 @@ export default function Projects() {
     },
   });
 
+  // --- Handlers ---
   const handleAdd = () => {
     setSelectedProject(null);
-    setOpenDialog(true);
+    setOpenFormDialog(true);
   };
 
   const handleEdit = (project) => {
     setSelectedProject(project);
-    setOpenDialog(true);
+    setOpenFormDialog(true);
+  };
+
+  // Handler to Open Image Dialog
+  const handleImageClick = (project) => {
+    setSelectedProject(project);
+    setOpenImageDialog(true);
   };
 
   const handleDelete = (id) => {
@@ -88,12 +101,11 @@ export default function Projects() {
       <TableContainer component={Paper} elevation={1}>
         <Table>
           <TableHead>
-            {/* Theme-aware background color */}
             <TableRow sx={{ bgcolor: "action.hover" }}>
               <TableCell sx={{ fontWeight: 600 }}>Title</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Tech Stack</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Repository</TableCell>
-              <TableCell align="center" sx={{ fontWeight: 600 }}>Sort Order</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 600 }}>Order</TableCell>
               <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -104,71 +116,60 @@ export default function Projects() {
                   <Typography fontWeight="bold" color="text.primary">
                     {project.title}
                   </Typography>
-                  <Typography 
-                    variant="caption" 
-                    color="text.secondary" 
-                    noWrap 
-                    sx={{ maxWidth: 200, display: "block" }}
-                  >
+                  <Typography variant="caption" color="text.secondary" noWrap sx={{ maxWidth: 200, display: "block" }}>
                     {project.description}
                   </Typography>
                 </TableCell>
                 <TableCell sx={{ maxWidth: 300 }}>
                   <Box display="flex" gap={0.5} flexWrap="wrap">
                     {project.tech_stack?.split(",").map((tech, index) => (
-                      <Chip 
-                        key={index} 
-                        label={tech.trim()} 
-                        size="small" 
-                        variant="outlined" 
-                        // Chip styles automatically adapt to theme mode
-                        sx={{ fontSize: "0.75rem" }}
-                      />
+                      <Chip key={index} label={tech.trim()} size="small" variant="outlined" sx={{ fontSize: "0.75rem" }} />
                     ))}
                   </Box>
                 </TableCell>
                 <TableCell>
                   {project.repo_link ? (
-                    <Link 
-                      href={project.repo_link} 
-                      target="_blank" 
-                      rel="noopener" 
-                      color="text.primary"
-                      sx={{ 
-                        display: "flex", 
-                        alignItems: "center",
-                        "&:hover": { color: "primary.main" } 
-                      }}
-                    >
+                    <Link href={project.repo_link} target="_blank" rel="noopener" color="text.primary" sx={{ display: "flex", alignItems: "center", "&:hover": { color: "primary.main" } }}>
                       <GitHubIcon fontSize="small" />
                     </Link>
-                  ) : (
-                    <Typography variant="body2" color="text.secondary">-</Typography>
-                  )}
+                  ) : "-"}
                 </TableCell>
                 <TableCell align="center">
-                  <Typography variant="body2" color="text.secondary">
-                    {project.sort_order}
-                  </Typography>
+                  {project.sort_order}
                 </TableCell>
                 <TableCell align="right">
                   <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <IconButton 
-                      size="small"
-                      onClick={() => handleEdit(project)}
-                      sx={{ color: "primary.main" }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => handleDelete(project.id)}
-                      disabled={deleteMutation.isPending}
-                      sx={{ color: "error.main" }}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                    
+                    {/* Image Action Button */}
+                    <Tooltip title="View/Update Image">
+                      <IconButton 
+                        size="small" 
+                        color={project.image_url ? "primary" : "default"}
+                        onClick={() => handleImageClick(project)}
+                      >
+                        <ImageIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    {/* Edit Text Button */}
+                    <Tooltip title="Edit Details">
+                      <IconButton size="small" onClick={() => handleEdit(project)} sx={{ color: "info.main" }}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    {/* Delete Button */}
+                    <Tooltip title="Delete">
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => handleDelete(project.id)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
                   </Box>
                 </TableCell>
               </TableRow>
@@ -176,9 +177,7 @@ export default function Projects() {
             {projects.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                  <Typography color="text.secondary">
-                    No projects found.
-                  </Typography>
+                  <Typography color="text.secondary">No projects found.</Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -186,11 +185,18 @@ export default function Projects() {
         </Table>
       </TableContainer>
 
-      {/* Add/Edit Dialog */}
+      {/* Main Form Dialog (Add/Edit Text) */}
       <ProjectDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        open={openFormDialog}
+        onClose={() => setOpenFormDialog(false)}
         projectToEdit={selectedProject}
+      />
+
+      {/* Image Handling Dialog */}
+      <ProjectImageDialog
+        open={openImageDialog}
+        onClose={() => setOpenImageDialog(false)}
+        project={selectedProject}
       />
     </Box>
   );

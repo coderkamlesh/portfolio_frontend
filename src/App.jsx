@@ -7,6 +7,7 @@ import MainLayout from "./components/layout/MainLayout";
 import Skills from "./pages/admin/Skills";
 import Projects from "./pages/admin/Projects";
 import Experiences from "./pages/admin/Experiences";
+import Profile from "./pages/admin/Profile";
 
 export default function App() {
   return (
@@ -28,8 +29,7 @@ export default function App() {
           }
         >
           <Route path="dashboard" element={<Dashboard />} />
-          {/* Add more nested routes here later */}
-          {/* <Route path="profile" element={<Profile />} /> */}
+          <Route path="profile" element={<Profile />} />
          
           <Route path="skills" element={<Skills />} />
            <Route path="experiences" element={<Experiences />} />

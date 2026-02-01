@@ -132,21 +132,7 @@ export default function Navbar({ drawerWidth, onDrawerToggle, isMobile }) {
              </Box>
           </Tooltip>
 
-          {/* Notifications */}
-          <Tooltip title="Notifications">
-            <IconButton color="inherit">
-              <Badge badgeContent={3} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-
-          {/* Settings */}
-          <Tooltip title="Settings">
-            <IconButton onClick={() => navigate("/admin/settings")} color="inherit">
-              <SettingsIcon />
-            </IconButton>
-          </Tooltip>
+         
 
           {/* User Profile */}
           <Tooltip title="Account">

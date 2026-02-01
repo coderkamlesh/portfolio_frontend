@@ -13,21 +13,26 @@ import {
   Typography,
   Chip,
   LinearProgress,
-  alpha,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import BusinessIcon from "@mui/icons-material/Business";
+import ImageIcon from "@mui/icons-material/Image"; // Image Icon Added
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getExperiences } from "@/service/public.service"; 
-import { deleteExperience } from "@/service/admin.service"; 
+import { getExperiences } from "@/service/public.service";
+import { deleteExperience } from "@/service/admin.service";
 import ExperienceDialog from "@/components/admin/ExperienceDialog";
+import ExperienceLogoDialog from "@/components/admin/ExperienceLogoDialog"; // New Dialog Import
 
 export default function Experiences() {
   const queryClient = useQueryClient();
-  const [openDialog, setOpenDialog] = useState(false);
+  
+  // States
+  const [openFormDialog, setOpenFormDialog] = useState(false);
+  const [openLogoDialog, setOpenLogoDialog] = useState(false); // State for Logo Dialog
   const [selectedExp, setSelectedExp] = useState(null);
 
   // Fetch Data
@@ -48,14 +53,21 @@ export default function Experiences() {
     },
   });
 
+  // --- Handlers ---
   const handleAdd = () => {
     setSelectedExp(null);
-    setOpenDialog(true);
+    setOpenFormDialog(true);
   };
 
   const handleEdit = (exp) => {
     setSelectedExp(exp);
-    setOpenDialog(true);
+    setOpenFormDialog(true);
+  };
+
+  // Open Logo Dialog
+  const handleLogoClick = (exp) => {
+    setSelectedExp(exp);
+    setOpenLogoDialog(true);
   };
 
   const handleDelete = (id) => {
@@ -67,7 +79,6 @@ export default function Experiences() {
   if (isLoading) return <LinearProgress />;
   if (isError) return <Typography color="error" p={3}>Failed to load experiences.</Typography>;
 
-  // Data extraction
   const experiences = expData?.data || [];
 
   return (
@@ -89,13 +100,12 @@ export default function Experiences() {
       <TableContainer component={Paper} elevation={1}>
         <Table>
           <TableHead>
-            {/* Header Background Theme se ayega (action.hover ya background.default) */}
             <TableRow sx={{ bgcolor: "action.hover" }}>
               <TableCell sx={{ fontWeight: 600 }}>Company</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Role</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Duration</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Location</TableCell>
-              <TableCell align="center" sx={{ fontWeight: 600 }}>Sort Order</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 600 }}>Order</TableCell>
               <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -104,7 +114,7 @@ export default function Experiences() {
               <TableRow key={exp.id} hover>
                 <TableCell>
                   <Box display="flex" alignItems="center" gap={2}>
-                    {/* Logo logic improved using MUI Box */}
+                    {/* Logo Display Logic */}
                     {exp.logo ? (
                       <Box
                         component="img"
@@ -115,8 +125,6 @@ export default function Experiences() {
                           height: 32,
                           objectFit: "contain",
                           borderRadius: 1,
-                          // Optional: agar transparent logo dark mode me na dikhe
-                          // bgcolor: "background.paper" 
                         }}
                       />
                     ) : (
@@ -137,7 +145,6 @@ export default function Experiences() {
                     label={exp.duration} 
                     size="small" 
                     variant="outlined" 
-                    // Chip automatically theme colors use karta hai
                   />
                 </TableCell>
                 <TableCell>
@@ -152,21 +159,41 @@ export default function Experiences() {
                 </TableCell>
                 <TableCell align="right">
                   <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <IconButton 
-                      size="small" 
-                      onClick={() => handleEdit(exp)}
-                      sx={{ color: "primary.main" }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDelete(exp.id)}
-                      disabled={deleteMutation.isPending}
-                      sx={{ color: "error.main" }}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                    
+                    {/* Update Logo Action */}
+                    <Tooltip title="Update Logo">
+                      <IconButton 
+                        size="small" 
+                        onClick={() => handleLogoClick(exp)}
+                        color={exp.logo ? "primary" : "default"}
+                      >
+                        <ImageIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    {/* Edit Text Action */}
+                    <Tooltip title="Edit Details">
+                      <IconButton 
+                        size="small" 
+                        onClick={() => handleEdit(exp)}
+                        sx={{ color: "info.main" }}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
+                    {/* Delete Action */}
+                    <Tooltip title="Delete">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(exp.id)}
+                        disabled={deleteMutation.isPending}
+                        sx={{ color: "error.main" }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+
                   </Box>
                 </TableCell>
               </TableRow>
@@ -184,11 +211,18 @@ export default function Experiences() {
         </Table>
       </TableContainer>
 
-      {/* Add/Edit Dialog */}
+      {/* Text Form Dialog */}
       <ExperienceDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        open={openFormDialog}
+        onClose={() => setOpenFormDialog(false)}
         experienceToEdit={selectedExp}
+      />
+
+      {/* Logo Update Dialog */}
+      <ExperienceLogoDialog
+        open={openLogoDialog}
+        onClose={() => setOpenLogoDialog(false)}
+        experience={selectedExp}
       />
     </Box>
   );
