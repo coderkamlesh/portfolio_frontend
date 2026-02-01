@@ -42,7 +42,7 @@ export const deleteExperience = async (id) => {
 };
 
 export const addProject = async (data) => {
-  const res = await axiosClient.post("/api/admin/projects", data); // Fixed path: removed trailing slash based on screenshot
+  const res = await axiosClient.post("/api/admin/projects", data); 
   return res.data;
 };
 
@@ -56,4 +56,63 @@ export const updateProject = async ({ id, data }) => {
 export const deleteProject = async (id) => {
   const res = await axiosClient.delete(`/api/admin/projects/${id}`);
   return res.data;
+};
+
+export const getHeroData = async () => {
+  const { data } = await axiosClient.get("/api/hero");
+  return data.data;
+};
+
+export const updateHeroData = async (payload) => {
+  const { data } = await axiosClient.put("/api/admin/hero", payload);
+  return data;
+};
+
+export const updateAvatar = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file); 
+
+  const { data } = await axiosClient.patch("/api/admin/hero/avatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+};
+export const updateProjectImage = async ({ id, file }) => {
+  const formData = new FormData();
+  formData.append("file", file); // Postman key: 'file'
+
+  const { data } = await axiosClient.patch(`/api/admin/projects/image/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+};
+
+export const updateExperienceLogo = async ({ id, file }) => {
+  const formData = new FormData();
+  formData.append("file", file); // Backend expects 'file'
+
+  const { data } = await axiosClient.patch(`/api/admin/experiences/logo/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+};
+// ... existing imports
+
+// Update Skill Icon (Multipart)
+export const updateSkillIcon = async ({ id, file }) => {
+  const formData = new FormData();
+  formData.append("file", file); // Backend expects 'file'
+
+  const { data } = await axiosClient.patch(`/api/admin/skills/icon/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
 };
