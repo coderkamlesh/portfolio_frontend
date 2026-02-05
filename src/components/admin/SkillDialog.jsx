@@ -27,7 +27,6 @@ export default function SkillDialog({ open, onClose, skillToEdit }) {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  // Jab bhi dialog open ho ya skillToEdit change ho, form reset/fill karo
   useEffect(() => {
     if (open) {
       if (skillToEdit) {
@@ -49,7 +48,6 @@ export default function SkillDialog({ open, onClose, skillToEdit }) {
   // Mutation for Add/Update
   const mutation = useMutation({
     mutationFn: (data) => {
-        // Percentage ko number me convert karna zaroori hai agar input string de raha ho
         const payload = { ...data, percentage: Number(data.percentage) };
         
         if (isEditMode) {
@@ -58,13 +56,13 @@ export default function SkillDialog({ open, onClose, skillToEdit }) {
         return addSkill(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["skills"] }); // List refresh
+      queryClient.invalidateQueries({ queryKey: ["skills"] }); 
       onClose();
       reset();
     },
     onError: (error) => {
         console.error("Error saving skill:", error);
-        alert("Failed to save skill"); // Toast use kar sakte ho yahan
+        alert("Failed to save skill"); 
     }
   });
 

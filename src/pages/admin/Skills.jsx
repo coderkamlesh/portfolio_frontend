@@ -19,20 +19,20 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import ImageIcon from "@mui/icons-material/Image"; // Import Image Icon
+import ImageIcon from "@mui/icons-material/Image"; 
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSkills } from "@/service/public.service"; 
 import { deleteSkill } from "@/service/admin.service"; 
 import SkillDialog from "@/components/admin/SkillDialog";
-import SkillIconDialog from "@/components/admin/SkillIconDialog"; // Import Dialog
+import SkillIconDialog from "@/components/admin/SkillIconDialog"; 
 
 export default function Skills() {
   const queryClient = useQueryClient();
   
   // Dialog States
   const [openFormDialog, setOpenFormDialog] = useState(false);
-  const [openIconDialog, setOpenIconDialog] = useState(false); // State for Icon Dialog
+  const [openIconDialog, setOpenIconDialog] = useState(false); 
   const [selectedSkill, setSelectedSkill] = useState(null);
 
   // Fetch Skills

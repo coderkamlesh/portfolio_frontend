@@ -53,7 +53,7 @@ export default function SkillIconDialog({ open, onClose, skill }) {
     onClose();
   };
 
-  // Current Icon URL from backend or Preview
+  
   const currentIcon = preview || skill?.icon;
 
   return (

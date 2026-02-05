@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material";
 
-// Portfolio Theme (Dark) - Default for public pages
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -58,42 +57,6 @@ const theme = createTheme({
     },
   },
 });
-
-// Admin Theme (Light) - For admin panel
-const adminTheme = createTheme({
-  palette:{
-    primary:{
-      main:'#FF5733'
-    },
-    secondary:{
-      main:'#00FF7F'
-    },
-    mode:'dark'
-    // background:{
-    //   default:"#00FF7F",
-    //   paper:"#00FF7F"
-    // }
-  },
-  typography:{
-    fontFamily:'SN Pro'
-  },
-  components:{
-    MuiButton:{
-      defaultProps:{
-        variant:'contained'
-      }
-      ,styleOverrides:{
-        root:{
-          borderRadius:'7px'
-        }
-      }
-    },
-
-  }
-});
-
-// Named exports for flexibility
-export { theme as portfolioTheme, adminTheme };
 
 
 export default theme;

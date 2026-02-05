@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import PublicPage from "@/pages/PublicPage";
+import PublicLayout from "@/components/layout/PublicLayout";
+
 import AdminLogin from "@/pages/admin/AdminLogin";
 import ProtectedRoute from "./components/middleware/ProtectedRoute";
 import Dashboard from "./pages/admin/Dashboard";
@@ -11,15 +14,16 @@ import Profile from "./pages/admin/Profile";
 
 export default function App() {
   return (
-    <BrowserRouter>
+   
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<PublicPage />} />
+        {/* ================= PUBLIC ROUTES ================= */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<PublicPage />} />
+        </Route>
 
-        {/* Admin Routes */}
+        {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin" element={<AdminLogin />} />
 
-        {/* Protected Admin Routes */}
         <Route
           path="/admin/*"
           element={
@@ -30,18 +34,14 @@ export default function App() {
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<Profile />} />
-         
           <Route path="skills" element={<Skills />} />
-           <Route path="experiences" element={<Experiences />} />
-           <Route path="projects" element={<Projects />} />
-          {/* <Route path="messages" element={<Messages />} /> */}
-          {/* <Route path="blog" element={<Blog />} /> */}
-          {/* <Route path="settings" element={<Settings />} /> */}
+          <Route path="experiences" element={<Experiences />} />
+          <Route path="projects" element={<Projects />} />
         </Route>
 
-        {/* 404 Redirect */}
+        {/* ================= FALLBACK ================= */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+ 
   );
 }

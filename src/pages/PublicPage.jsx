@@ -1,16 +1,34 @@
-import ExperienceSection from "@/components/user/ExperienceSection";
-import HeroSection from "@/components/user/HeroSection";
-import ProjectsSection from "@/components/user/ProjectsSection";
-import SkillsSection from "@/components/user/SkillsSection";
 import { Box } from "@mui/material";
 
+import Section from "@/components/public/Section";
+import HeroSection from "@/components/user/HeroSection";
+import SkillsSection from "@/components/user/SkillsSection";
+import ExperienceSection from "@/components/user/ExperienceSection";
+import ProjectsSection from "@/components/user/ProjectsSection";
+import ContactSection from "@/components/user/ContactSection";
+
 export default function PublicPage() {
-  return (    
-      <Box>
+  return (
+    <Box>
+      <Section id="hero">
         <HeroSection />
+      </Section>
+
+      <Section id="skills">
         <SkillsSection />
+      </Section>
+
+      <Section id="experience">
         <ExperienceSection />
+      </Section>
+
+      <Section id="projects">
         <ProjectsSection />
-      </Box>    
+      </Section>
+
+      <Section id="contact">
+        <ContactSection />
+      </Section>
+    </Box>
   );
 }
