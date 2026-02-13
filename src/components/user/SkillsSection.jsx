@@ -24,7 +24,7 @@ export default function SkillsSection() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
           <Box sx={{ textAlign: "center", mb: 8 }}>
@@ -46,7 +46,7 @@ export default function SkillsSection() {
             key={category}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ delay: index * 0.15 }}
           >
             <Box sx={{ mb: 6 }}>

@@ -17,7 +17,7 @@ export default function ProjectsSection() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
           <Box sx={{ textAlign: "center", mb: 8 }}>
@@ -41,12 +41,13 @@ export default function ProjectsSection() {
             .map((project, index) => (
               <Grid
                 key={project.id}
-                size={{ xs: 12, sm: 6, md: 4 }}
+                item // Added 'item' prop for Grid component
+                xs={12} sm={6} md={4} // Corrected 'size' to 'xs', 'sm', 'md' props
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false, amount: 0.2 }}
                   transition={{ delay: index * 0.1 }}
                 >
                   <ProjectCard project={project} />

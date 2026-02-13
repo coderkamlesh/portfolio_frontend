@@ -35,6 +35,8 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
             >
               <Chip label={data.job_title} sx={{ mb: 3 }} />
 
@@ -71,19 +73,49 @@ export default function HeroSection() {
 
           {/* RIGHT */}
           <Grid size={{ xs: 12, md: 5 }}>
-            <Box sx={{ position: "relative", width: 320, height: 320, mx: "auto" }}>
+            <Box sx={{
+              position: "relative",
+              width: { xs: 280, md: 350 },
+              height: { xs: 280, md: 350 },
+              mx: "auto",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
               <AnimatedBlob delay={0} />
-              <AnimatedBlob delay={3} />
-              <Avatar
-                src={data.avatar_url}
-                sx={{
-                  width: 160,
-                  height: 160,
-                  position: "absolute",
-                  inset: 0,
-                  m: "auto",
+              <AnimatedBlob delay={3} sx={{ background: (theme) => `linear-gradient(45deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})` }} />
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                style={{
+                  zIndex: 2,
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
-              />
+              >
+                <Box
+                  component="img"
+                  src={data.avatar_url || "/kamlesh_profile_image.png"}
+                  alt={data.full_name}
+                  sx={{
+                    width: { xs: 280, md: 400 },
+                    height: { xs: 280, md: 400 },
+                    objectFit: "cover",
+                    objectPosition: "center 20%", // Focus slightly more on the top of the image
+                    borderRadius: "24% 76% 70% 30% / 45% 30% 70% 55%", // Slightly smoother organic shape
+                    border: "8px solid rgba(245, 158, 11, 0.05)",
+                    outline: "2px solid",
+                    outlineColor: "primary.main",
+                    boxShadow: (theme) => `0 20px 60px ${theme.palette.primary.main}44`,
+                    background: "rgba(255, 255, 255, 0.05)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                />
+              </motion.div>
             </Box>
           </Grid>
         </Grid>
